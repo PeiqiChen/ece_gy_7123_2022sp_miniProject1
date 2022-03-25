@@ -6,10 +6,13 @@ import torch.optim as optim
 import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
 import time
+
 import torchvision
 import torchvision.transforms as transforms
+
 import os
 import argparse
+
 from models import *
 from utils import progress_bar
 
@@ -48,6 +51,7 @@ class BasicBlock(nn.Module):
         out += self.shortcut(x)
         out = F.relu(out)
         return out
+
 
 class ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
@@ -101,7 +105,7 @@ class AddGaussianNoise(object):
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
-parser.add_argument('--lr', default=0.01, type=float, help='learning rate') # 1e-3
+parser.add_argument('--lr', default=0.1, type=float, help='learning rate') # 1e-3
 parser.add_argument('--resume', '-r', action='store_true',
                     help='resume from checkpoint')
 args = parser.parse_args()
@@ -153,8 +157,7 @@ if device == 'cuda':
 # a="l4-b3643-Adam-lr001-tmax64"
 # a="l4-b3643-Adam-lr01-origdataAug"
 # a = "l4-b3643-SDG-lr1e-3"
-a = "l4-b3643-SDG-lr001"
-# a = "l4-b3643-SDG-lr01Static"
+a = "l4-b3643-SDG-lr01Static"
 
 # LR = LearningRate()
 
@@ -267,7 +270,7 @@ f.close()
 
 print("calculate parameters: ", count_parameters(net))
 
-scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=200)
+# scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=200)
 
 start = time.time()
 for epoch in range(start_epoch, start_epoch + 200):
@@ -277,7 +280,7 @@ for epoch in range(start_epoch, start_epoch + 200):
     temp_c, temp_d = test(epoch)
     test_loss_store.append(temp_c)
     test_acc_store.append(temp_d)
-    scheduler.step()
+    # scheduler.step()
 
 end = time.time()
 
